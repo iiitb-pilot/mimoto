@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.mimoto.constant.SwaggerLiteralConstants;
 import io.mosip.mimoto.dto.openid.presentation.PresentationDefinitionDTO;
 import io.mosip.mimoto.dto.openid.presentation.PresentationRequestDTO;
-import io.mosip.mimoto.exception.ErrorConstants;
-import io.mosip.mimoto.exception.InvalidCredentialResourceException;
-import io.mosip.mimoto.exception.InvalidVerifierException;
-import io.mosip.mimoto.exception.VPNotCreatedException;
+import io.mosip.mimoto.exception.*;
 import io.mosip.mimoto.service.PresentationService;
 import io.mosip.mimoto.service.VerifierService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,13 +68,16 @@ public class PresentationController {
                     .clientId(clientId)
                     .redirectUri(redirectUri).build();
             String redirectString = presentationService.authorizePresentation(presentationRequestDTO);
-            log.info("Completed Presentation Authorization in the controller.");
+            log.info("Completed Presentation Authorization in the controller." + redirectString);
             response.sendRedirect(redirectString);
         } catch( InvalidVerifierException exception){
+            log.info("Error " + ExceptionUtils.getStackTrace(exception));
             sendRedirect(response, injiWebRedirectUrl, exception.getErrorCode(), exception.getErrorText(), exception);
         } catch(VPNotCreatedException | InvalidCredentialResourceException exception){
+            log.info("Error " + ExceptionUtils.getStackTrace(exception));
             sendRedirect(response, redirectUri, exception.getErrorCode(), exception.getErrorText(), exception);
         } catch (Exception exception){
+            log.info("Error " + ExceptionUtils.getStackTrace(exception));
             sendRedirect(response, redirectUri, ErrorConstants.INTERNAL_SERVER_ERROR.getErrorCode(), ErrorConstants.INTERNAL_SERVER_ERROR.getErrorMessage(), exception);
         }
     }

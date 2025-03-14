@@ -68,11 +68,15 @@ public class PresentationServiceImpl implements PresentationService {
                         try {
                             VerifiablePresentationDTO verifiablePresentationDTO = constructVerifiablePresentationString(vcCredentialResponse.getCredential());
                             String presentationSubmission = constructPresentationSubmission(verifiablePresentationDTO, presentationDefinitionDTO, inputDescriptorDTO);
+                            log.info("presentationSubmission " + presentationSubmission);
                             String vpToken = objectMapper.writeValueAsString(verifiablePresentationDTO);
-                            return String.format(injiOvpRedirectURLPattern,
+                            log.info("vpToken " + vpToken);
+                            String redirectUrl =  String.format(injiOvpRedirectURLPattern,
                                     presentationRequestDTO.getRedirectUri(),
                                     Base64.getUrlEncoder().encodeToString(vpToken.getBytes(StandardCharsets.UTF_8)),
                                     URLEncoder.encode(presentationSubmission, StandardCharsets.UTF_8));
+                            log.info("redirectUrl " + redirectUrl);
+                            return redirectUrl;
                         } catch (JsonProcessingException e) {
                             throw new VPNotCreatedException(ErrorConstants.INVALID_REQUEST.getErrorMessage());
                         }
@@ -100,9 +104,9 @@ public class PresentationServiceImpl implements PresentationService {
         AtomicInteger atomicInteger = new AtomicInteger(0);
         List<SubmissionDescriptorDTO> submissionDescriptorDTOList = verifiablePresentationDTO.getVerifiableCredential()
                 .stream().map(verifiableCredential -> SubmissionDescriptorDTO.builder()
-                    .id(inputDescriptorDTO.getId())
-                    .format("ldp_vc")
-                    .path("$.verifiableCredential[" + atomicInteger.getAndIncrement() + "]").build()).collect(Collectors.toList());
+                        .id(inputDescriptorDTO.getId())
+                        .format("ldp_vc")
+                        .path("$.verifiableCredential[" + atomicInteger.getAndIncrement() + "]").build()).collect(Collectors.toList());
 
         PresentationSubmissionDTO presentationSubmissionDTO = PresentationSubmissionDTO.builder()
                 .id(UUID.randomUUID().toString())
