@@ -13,11 +13,8 @@ on:
       - '!release-branch'
       - release*
       - master
-      - 1.*
-      - develop*
-      - MOSIP*
-      - qa-develop
-      - inji*-*
+      - dst-*
+      - mec-*
 
 jobs:
   build-mimoto:
@@ -30,7 +27,7 @@ jobs:
       OSSRH_SECRET: ${{ secrets.OSSRH_SECRET }}
       OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
       GPG_SECRET: ${{ secrets.GPG_SECRET }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INJI_TEAM }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   ## Recreate zips to provide support for docker unzip operation
   recreate-zips:
@@ -88,7 +85,7 @@ jobs:
       DEV_NAMESPACE_DOCKER_HUB: ${{ secrets.DEV_NAMESPACE_DOCKER_HUB }}
       ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}
       RELEASE_DOCKER_HUB: ${{ secrets.RELEASE_DOCKER_HUB }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INJI_TEAM }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK}}
 
   build-maven-apitest-mimoto:
     uses: mosip/kattu/.github/workflows/maven-build.yml@master-java21
@@ -100,7 +97,7 @@ jobs:
       OSSRH_SECRET: ${{ secrets.OSSRH_SECRET }}
       OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
       GPG_SECRET: ${{ secrets.GPG_SECRET }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INJI_TEAM }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   build-apitest-mimoto-local:
     needs: build-maven-apitest-mimoto
@@ -169,4 +166,4 @@ jobs:
       DEV_NAMESPACE_DOCKER_HUB: ${{ secrets.DEV_NAMESPACE_DOCKER_HUB }}
       ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}
       RELEASE_DOCKER_HUB: ${{ secrets.RELEASE_DOCKER_HUB }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INJI_TEAM }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
