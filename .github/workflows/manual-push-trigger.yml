@@ -1,4 +1,4 @@
-name: Maven Package upon a push
+name: Manual trigger for Java21 Build
 
 on:
   release:
